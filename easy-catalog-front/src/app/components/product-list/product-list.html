@@ -1,0 +1,75 @@
+<div class="container">
+    <h1>Easy Catalog</h1>
+
+    <!-- Filters -->
+    <div class="filters">
+        <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search products...">
+
+        <select [(ngModel)]="categoryFilter" (change)="applyFilters()">
+            <option value="">All Categories</option>
+            <option *ngFor="let category of categoriesList" [value]="category.name">
+                {{ category.name }}
+            </option>
+        </select>
+
+        <label>
+            <input type="checkbox" [(ngModel)]="showAvailableOnly" (change)="applyFilters()">
+            Show Available Only
+        </label>
+    </div>
+
+    <!-- Add Product Button -->
+    <button (click)="showAddForm = true" class="add-button">Add New Product</button>
+
+    <!-- Add/Edit Form -->
+    <div *ngIf="showAddForm || editingProduct" class="product-form">
+        <h3>{{editingProduct ? 'Edit' : 'Add'}} Product</h3>
+        <form (ngSubmit)="saveProduct()">
+            <input [(ngModel)]="currentProduct.name" name="name" placeholder="Name" required>
+            <textarea [(ngModel)]="currentProduct.description" name="description" placeholder="Description"
+                required></textarea>
+            <input type="number" [(ngModel)]="currentProduct.price" name="price" placeholder="Price" required>
+            
+            <select (change)="onSelectChange($event)">
+                <option value="">Select an item</option>
+                <option *ngFor="let item of categoriesList" [value]="item.id">
+                    {{ item.name }}
+                </option>
+            </select>
+            
+            <label>
+                <input type="checkbox" [(ngModel)]="currentProduct.available" name="available">
+                Available
+            </label>
+            <button type="submit">Save</button>
+            <button type="button" (click)="cancelEdit()">Cancel</button>
+        </form>
+    </div>
+
+    <!-- Products Table -->
+    <table>
+        <thead>
+            <tr>
+                <th (click)="sort('name')">Name ↕</th>
+                <th>Description</th>
+                <th (click)="sort('price')">Price ↕</th>
+                <th (click)="sort('category')">Category ↕</th>
+                <th (click)="sort('available')">Available ↕</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of filteredProducts">
+                <td>{{product.name}}</td>
+                <td>{{product.description}}</td>
+                <td>{{product.price | currency}}</td>
+                <td>{{product.category}}</td>
+                <td>{{product.available ? 'Yes' : 'No'}}</td>
+                <td>
+                    <button (click)="editProduct(product)">Edit</button>
+                    <button (click)="deleteProduct(product.id)" class="delete">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
