@@ -1,7 +1,10 @@
 package com.andersonfariasdev.easycatalogbackend.controller;
 
 import com.andersonfariasdev.easycatalogbackend.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -24,4 +27,13 @@ public class AuthController {
         }
         return ResponseEntity.ok(Map.of("token", token));
     }
+
+    @GetMapping("/validate-token")
+    public ResponseEntity<?> validateToken(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        return ResponseEntity.ok(Map.of("message", "Token is valid", "user", userDetails.getUsername()));
+    }
+
 }

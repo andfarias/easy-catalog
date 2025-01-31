@@ -23,28 +23,51 @@
 
     <!-- Add/Edit Form -->
     <div *ngIf="showAddForm || editingProduct" class="product-form">
-        <h3>{{editingProduct ? 'Edit' : 'Add'}} Product</h3>
-        <form (ngSubmit)="saveProduct()">
-            <input [(ngModel)]="currentProduct.name" name="name" placeholder="Name" required>
-            <textarea [(ngModel)]="currentProduct.description" name="description" placeholder="Description"
-                required></textarea>
-            <input type="number" [(ngModel)]="currentProduct.price" name="price" placeholder="Price" required>
-            
-            <select (change)="onSelectChange($event)">
-                <option value="">Select an item</option>
-                <option *ngFor="let item of categoriesList" [value]="item.id">
-                    {{ item.name }}
-                </option>
-            </select>
-            
-            <label>
-                <input type="checkbox" [(ngModel)]="currentProduct.available" name="available">
-                Available
-            </label>
-            <button type="submit">Save</button>
-            <button type="button" (click)="cancelEdit()">Cancel</button>
+        <h3>{{ editingProduct ? 'Edit' : 'Add' }} Product</h3>
+
+        <form (ngSubmit)="saveProduct()" class="form-container">
+            <div class="form-group">
+                <label for="name">Product Name</label>
+                <input id="name" [(ngModel)]="currentProduct.name" name="name" placeholder="Enter product name"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" [(ngModel)]="currentProduct.description" name="description"
+                    placeholder="Enter product description" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price ($)</label>
+                <input id="price" type="number" [(ngModel)]="currentProduct.price" name="price"
+                    placeholder="Enter price" required>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" (change)="onSelectChange($event)" required>
+                    <option value="">Select a category</option>
+                    <option *ngFor="let item of categoriesList" [value]="item.id">
+                        {{ item.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <input id="available" type="checkbox" [(ngModel)]="currentProduct.available" name="available" style="width: auto">
+                <label for="available">
+                    Available
+                </label>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn save">Save</button>
+                <button type="button" class="btn cancel" (click)="cancelEdit()">Cancel</button>
+            </div>
         </form>
     </div>
+
 
     <!-- Products Table -->
     <table>

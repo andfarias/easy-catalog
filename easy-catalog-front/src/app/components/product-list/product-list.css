@@ -8,6 +8,15 @@
     gap: 10px;
 }
 
+.filters input {
+    width: auto;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
