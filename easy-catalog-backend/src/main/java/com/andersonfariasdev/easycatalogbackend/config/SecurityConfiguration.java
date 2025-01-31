@@ -7,6 +7,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -15,17 +20,31 @@ public class SecurityConfiguration {
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
-                // Configura o acesso
+
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/h2-console/**").permitAll()  // Permite o acesso ao H2 Console sem autenticação
-                        .anyRequest().authenticated()  // Requer autenticação para qualquer outra requisição
+
+                        .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-                // Desabilita CSRF (necessário para o H2 Console)
                 .csrf(AbstractHttpConfigurer::disable)
-                // Desabilita o uso de frames (necessário para o H2 Console funcionar dentro de um iframe)
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 );
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 }

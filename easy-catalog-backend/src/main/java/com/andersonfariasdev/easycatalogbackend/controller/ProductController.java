@@ -1,5 +1,7 @@
 package com.andersonfariasdev.easycatalogbackend.controller;
 
+import com.andersonfariasdev.easycatalogbackend.dto.ProductCreateDto;
+import com.andersonfariasdev.easycatalogbackend.dto.ProductDto;
 import com.andersonfariasdev.easycatalogbackend.entity.ProductEntity;
 import com.andersonfariasdev.easycatalogbackend.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,26 +20,26 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping
-    public List<ProductEntity> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductEntity> getProductById(@PathVariable Long id) {
-        Optional<ProductEntity> product = productService.getProductById(id);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Long id) {
+        Optional<ProductDto> productDto = productService.getProductById(id);
+        return productDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping
-    public ResponseEntity<ProductEntity> createProduct(@RequestBody ProductEntity product) {
-        ProductEntity createdProduct = productService.createProduct(product);
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductCreateDto productDto) {
+        ProductDto createdProduct = productService.createProduct(productDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductEntity> updateProduct(@PathVariable Long id, @RequestBody ProductEntity product) {
-        ProductEntity updatedProduct = productService.updateProduct(id, product);
-        return updatedProduct != null ? ResponseEntity.ok(updatedProduct) : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
+        ProductDto updatedProduct = productService.updateProduct(id, productDto);
+        return ResponseEntity.ok(updatedProduct);
     }
 
     @DeleteMapping("/{id}")
