@@ -65,6 +65,13 @@ The frontend application is built using Angular and provides a user interface fo
 2.  Install dependencies: `npm install`
 3.  Run the application: `ng serve`
 
+## Demo
+
+![Login page](.github/login-print.png)
+
+![Catalog](.github/products-print.png)
+
+
 ---
 
 Anderson Farias.
